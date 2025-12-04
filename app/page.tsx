@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 const navLinks = [
   { href: "#about", label: "О доме" },
@@ -488,6 +489,50 @@ function Reviews() {
 }
 
 function Booking() {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    dates: "",
+    format: "",
+    comment: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch("/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitStatus("success");
+        setFormData({
+          name: "",
+          phone: "",
+          dates: "",
+          format: "",
+          comment: "",
+        });
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SectionWrapper
       id="booking"
@@ -495,11 +540,13 @@ function Booking() {
       title="Расскажите, когда хотите приехать"
     >
       <div className="grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Имя">
               <input
                 required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Как к вам обращаться?"
                 className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
               />
@@ -507,6 +554,8 @@ function Booking() {
             <Field label="Телефон или мессенджер">
               <input
                 required
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+7..."
                 className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
               />
@@ -516,12 +565,19 @@ function Booking() {
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Желаемые даты">
               <input
+                value={formData.dates}
+                onChange={(e) => setFormData({ ...formData, dates: e.target.value })}
                 placeholder="Например: 5–7 июля"
                 className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
               />
             </Field>
             <Field label="Повод / формат">
-              <select className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300">
+              <select
+                value={formData.format}
+                onChange={(e) => setFormData({ ...formData, format: e.target.value })}
+                className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
+              >
+                <option value="">Выберите формат</option>
                 <option>Выходные вдвоём</option>
                 <option>Небольшой праздник</option>
                 <option>Фотосессия</option>
@@ -533,22 +589,32 @@ function Booking() {
           <Field label="Комментарий">
             <textarea
               rows={3}
+              value={formData.comment}
+              onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
               placeholder="Сколько гостей, есть ли дети, нужны ли особые условия, во сколько планируете заезд..."
               className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
             />
           </Field>
 
+          {submitStatus === "success" && (
+            <div className="rounded-xl bg-green-500/20 border border-green-500/50 px-4 py-3 text-sm text-green-300">
+              ✅ Заявка отправлена! Мы свяжемся с вами в ближайшее время.
+            </div>
+          )}
+
+          {submitStatus === "error" && (
+            <div className="rounded-xl bg-red-500/20 border border-red-500/50 px-4 py-3 text-sm text-red-300">
+              ❌ Ошибка при отправке. Попробуйте позже или свяжитесь с нами напрямую.
+            </div>
+          )}
+
           <button
             type="submit"
-            className="mt-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-amber-300"
+            disabled={isSubmitting}
+            className="mt-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-amber-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Отправить запрос на бронирование
+            {isSubmitting ? "Отправка..." : "Отправить запрос на бронирование"}
           </button>
-
-          <p className="text-[11px] text-white/45">
-            Сейчас форма никуда не отправляет данные. Для реальных заявок можно
-            подключить отправку в Telegram/WhatsApp или на почту.
-          </p>
         </form>
 
         <div className="space-y-5 text-sm text-white/75">
