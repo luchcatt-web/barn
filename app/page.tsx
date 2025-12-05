@@ -98,7 +98,7 @@ function Hero() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
-      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-4 pt-24 pb-16 md:flex-row md:items-center md:justify-center md:pb-24">
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-4 pt-[40vh] pb-16 md:flex-row md:items-end md:justify-center md:pb-24">
         <div className="max-w-xl md:text-center md:mx-auto">
           <p className="mb-6 text-xs uppercase tracking-[0.5em] text-white/50 font-light">
             барнхаус для камерного отдыха
