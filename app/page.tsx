@@ -678,20 +678,20 @@ function Booking() {
               </p>
             </div>
           )}
-            <Field label="Повод / формат">
-              <select
-                value={formData.format}
-                onChange={(e) => setFormData({ ...formData, format: e.target.value })}
-                className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
-              >
-                <option value="">Выберите формат</option>
-                <option>Выходные вдвоём</option>
-                <option>Небольшой праздник</option>
-                <option>Фотосессия</option>
-                <option>Другое (укажу в комментарии)</option>
-              </select>
-            </Field>
-          </div>
+
+          <Field label="Повод / формат">
+            <select
+              value={formData.format}
+              onChange={(e) => setFormData({ ...formData, format: e.target.value })}
+              className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
+            >
+              <option value="">Выберите формат</option>
+              <option>Выходные вдвоём</option>
+              <option>Небольшой праздник</option>
+              <option>Фотосессия</option>
+              <option>Другое (укажу в комментарии)</option>
+            </select>
+          </Field>
 
           <Field label="Комментарий">
             <textarea
