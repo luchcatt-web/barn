@@ -527,6 +527,7 @@ function Booking() {
     checkIn: "",
     checkOut: "",
     format: "",
+    furako: "",
     comment: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -565,6 +566,22 @@ function Booking() {
 
   const nights = calculateNights();
 
+  // Расчет стоимости услуг
+  const getFurakoPrice = () => {
+    if (formData.furako === "with_filling") return 4500;
+    if (formData.furako === "without_filling") return 3000;
+    return 0;
+  };
+
+  const calculateTotalPrice = () => {
+    const accommodationPrice = nights * 10000;
+    const furakoPrice = getFurakoPrice();
+    return accommodationPrice + furakoPrice;
+  };
+
+  const totalPrice = calculateTotalPrice();
+  const furakoPrice = getFurakoPrice();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -587,6 +604,7 @@ function Booking() {
           checkIn: "",
           checkOut: "",
           format: "",
+          furako: "",
           comment: "",
         });
       } else {
@@ -668,17 +686,6 @@ function Booking() {
             </Field>
           </div>
 
-          {nights > 0 && (
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
-              <p className="text-sm text-amber-300">
-                <span className="font-semibold">Количество суток:</span> {nights} {nights === 1 ? 'ночь' : nights < 5 ? 'ночи' : 'ночей'}
-              </p>
-              <p className="text-xs text-amber-300/70 mt-1">
-                Стоимость: {nights * 10000} ₽
-              </p>
-            </div>
-          )}
-
           <Field label="Повод / формат">
             <select
               value={formData.format}
@@ -692,6 +699,44 @@ function Booking() {
               <option>Другое (укажу в комментарии)</option>
             </select>
           </Field>
+
+          <Field label="Японская купель фурако">
+            <select
+              value={formData.furako}
+              onChange={(e) => setFormData({ ...formData, furako: e.target.value })}
+              className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
+            >
+              <option value="">Без купели</option>
+              <option value="without_filling">Купель фурако без наполнения - 3 000 ₽</option>
+              <option value="with_filling">Купель фурако с цитрусовым наполнением - 4 500 ₽</option>
+            </select>
+          </Field>
+
+          {(nights > 0 || furakoPrice > 0) && (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 space-y-2">
+              {nights > 0 && (
+                <div>
+                  <p className="text-sm text-amber-300">
+                    <span className="font-semibold">Проживание:</span> {nights} {nights === 1 ? 'ночь' : nights < 5 ? 'ночи' : 'ночей'} × 10 000 ₽ = {nights * 10000} ₽
+                  </p>
+                </div>
+              )}
+              {furakoPrice > 0 && (
+                <div>
+                  <p className="text-sm text-amber-300">
+                    <span className="font-semibold">Купель фурако:</span> {furakoPrice} ₽
+                  </p>
+                </div>
+              )}
+              {totalPrice > 0 && (
+                <div className="pt-2 border-t border-amber-500/30">
+                  <p className="text-base font-bold text-amber-300">
+                    Итого: {totalPrice} ₽
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           <Field label="Комментарий">
             <textarea

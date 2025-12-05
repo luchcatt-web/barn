@@ -6,7 +6,7 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '354738973';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, phone, checkIn, checkOut, format, comment } = body;
+    const { name, phone, checkIn, checkOut, format, furako, comment } = body;
 
     if (!TELEGRAM_BOT_TOKEN) {
       return NextResponse.json(
@@ -36,6 +36,17 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Рассчитываем стоимость услуг
+    const getFurakoInfo = () => {
+      if (furako === 'with_filling') return { name: 'Купель фурако с цитрусовым наполнением', price: 4500 };
+      if (furako === 'without_filling') return { name: 'Купель фурако без наполнения', price: 3000 };
+      return { name: 'Без купели', price: 0 };
+    };
+
+    const furakoInfo = getFurakoInfo();
+    const accommodationPrice = nights * 10000;
+    const totalPrice = accommodationPrice + furakoInfo.price;
+
     // Формируем сообщение
     const message = `🎯 *Новая заявка на бронирование*
 
@@ -45,6 +56,13 @@ export async function POST(request: NextRequest) {
 📅 *Выезд:* ${checkOutFormatted}
 🌙 *Количество суток:* ${nights > 0 ? nights : 'не указано'}
 🎉 *Формат:* ${format || 'не указано'}
+🛁 *Купель фурако:* ${furakoInfo.name}${furakoInfo.price > 0 ? ` (${furakoInfo.price} ₽)` : ''}
+
+💰 *Расчет стоимости:*
+${nights > 0 ? `Проживание: ${nights} ${nights === 1 ? 'ночь' : nights < 5 ? 'ночи' : 'ночей'} × 10 000 ₽ = ${accommodationPrice} ₽` : ''}
+${furakoInfo.price > 0 ? `Купель фурако: ${furakoInfo.price} ₽` : ''}
+${totalPrice > 0 ? `*Итого: ${totalPrice} ₽*` : ''}
+
 💬 *Комментарий:* ${comment || 'нет комментария'}
 
 _Время заявки: ${new Date().toLocaleString('ru-RU')}_`;
