@@ -524,12 +524,46 @@ function Booking() {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    dates: "",
+    checkIn: "",
+    checkOut: "",
     format: "",
     comment: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+
+  // Форматирование телефона в формат +7(XXX)XXX-XX-XX
+  const formatPhone = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    if (numbers.length === 0) return "";
+    if (numbers[0] !== "7" && numbers[0] !== "8") {
+      return "+7" + numbers.slice(0, 10);
+    }
+    const cleaned = numbers[0] === "8" ? "7" + numbers.slice(1) : numbers;
+    if (cleaned.length <= 1) return "+7";
+    if (cleaned.length <= 4) return `+7(${cleaned.slice(1)}`;
+    if (cleaned.length <= 7) return `+7(${cleaned.slice(1, 4)})${cleaned.slice(4)}`;
+    if (cleaned.length <= 9) return `+7(${cleaned.slice(1, 4)})${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
+    return `+7(${cleaned.slice(1, 4)})${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhone(e.target.value);
+    setFormData({ ...formData, phone: formatted });
+  };
+
+  // Расчет количества суток
+  const calculateNights = () => {
+    if (!formData.checkIn || !formData.checkOut) return 0;
+    const checkIn = new Date(formData.checkIn);
+    const checkOut = new Date(formData.checkOut);
+    if (checkOut <= checkIn) return 0;
+    const diffTime = checkOut.getTime() - checkIn.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const nights = calculateNights();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -550,7 +584,8 @@ function Booking() {
         setFormData({
           name: "",
           phone: "",
-          dates: "",
+          checkIn: "",
+          checkOut: "",
           format: "",
           comment: "",
         });
@@ -583,26 +618,66 @@ function Booking() {
                 className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
               />
             </Field>
-            <Field label="Телефон или мессенджер">
+            <Field label="Телефон">
               <input
                 required
+                type="tel"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+7..."
+                onChange={handlePhoneChange}
+                placeholder="+7(999)123-45-67"
+                maxLength={18}
                 className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
               />
             </Field>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Field label="Желаемые даты">
+            <Field label="Дата заезда">
               <input
-                value={formData.dates}
-                onChange={(e) => setFormData({ ...formData, dates: e.target.value })}
-                placeholder="Например: 5–7 июля"
-                className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300"
+                required
+                type="date"
+                value={formData.checkIn}
+                onChange={(e) => {
+                  setFormData({ ...formData, checkIn: e.target.value });
+                  // Автоматически устанавливаем дату выезда минимум на день позже
+                  if (formData.checkOut && e.target.value >= formData.checkOut) {
+                    const nextDay = new Date(e.target.value);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    setFormData({ 
+                      ...formData, 
+                      checkIn: e.target.value,
+                      checkOut: nextDay.toISOString().split('T')[0]
+                    });
+                  } else {
+                    setFormData({ ...formData, checkIn: e.target.value });
+                  }
+                }}
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300 [color-scheme:dark]"
               />
             </Field>
+            <Field label="Дата выезда">
+              <input
+                required
+                type="date"
+                value={formData.checkOut}
+                onChange={(e) => setFormData({ ...formData, checkOut: e.target.value })}
+                min={formData.checkIn || new Date().toISOString().split('T')[0]}
+                className="w-full rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-amber-300 [color-scheme:dark]"
+              />
+            </Field>
+          </div>
+
+          {nights > 0 && (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+              <p className="text-sm text-amber-300">
+                <span className="font-semibold">Количество суток:</span> {nights} {nights === 1 ? 'ночь' : nights < 5 ? 'ночи' : 'ночей'}
+              </p>
+              <p className="text-xs text-amber-300/70 mt-1">
+                Стоимость: {nights * 10000} ₽
+              </p>
+            </div>
+          )}
             <Field label="Повод / формат">
               <select
                 value={formData.format}
