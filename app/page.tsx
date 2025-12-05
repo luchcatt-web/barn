@@ -90,7 +90,7 @@ function Hero() {
 
       {/* Фото для десктопа */}
       <div
-        className="pointer-events-none absolute inset-0 hidden bg-cover bg-center md:block"
+        className="pointer-events-none absolute inset-0 hidden bg-cover bg-center md:block animate-zoom-in-out"
         style={{
           backgroundImage:
             "url('/2025-12-04 22.57.09.jpg')",
