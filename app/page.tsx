@@ -224,25 +224,31 @@ function About() {
             </div>
             <div>
               <p className="font-medium text-white">Check-in / Check-out</p>
-              <p>заезд с 15:00, выезд до 12:00</p>
+              <p>заезд с 14:00, выезд до 12:00</p>
             </div>
           </div>
         </div>
 
         <div className="space-y-4">
-          <div className="h-56 rounded-3xl bg-gradient-to-tr from-amber-500/40 via-amber-700/40 to-black/80 p-[1px] md:h-72">
-            <div
-              className="h-full rounded-[1.4rem] bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  "url('https://images.pexels.com/photos/5998130/pexels-photo-5998130.jpeg?auto=compress&cs=tinysrgb&w=1600')",
-              }}
+          <div className="h-56 rounded-3xl bg-gradient-to-tr from-amber-500/40 via-amber-700/40 to-black/80 p-[1px] md:h-72 overflow-hidden">
+            <img
+              src="/photo/photo1.jpg"
+              alt="Барнхаус"
+              className="h-full w-full rounded-[1.4rem] object-cover"
             />
           </div>
-          <p className="text-xs text-white/60">
-            Здесь могут быть реальные фото домика, террасы и интерьера — их мы
-            подгрузим вместо стоковых.
-          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <img
+              src="/photo/photo2.jpg"
+              alt="Интерьер"
+              className="h-24 w-full rounded-xl object-cover"
+            />
+            <img
+              src="/photo/photo3.jpg"
+              alt="Терраса"
+              className="h-24 w-full rounded-xl object-cover"
+            />
+          </div>
         </div>
       </div>
     </SectionWrapper>
@@ -257,30 +263,33 @@ const insideItems = [
       "панорамные окна с видом на природу",
       "уютная атмосфера для отдыха",
     ],
+    image: "/photo/photo4.jpg",
   },
   {
     title: "Спальные места",
     points: [
-      "двуспальная кровать с качественным бельём",
-      "доп. спальные места (диван / матрасы — впиши своё)",
-      "тёмные шторы для комфортного сна",
+      "большая кровать размера king size",
+      "раскладной диван",
     ],
+    image: "/photo/photo5.jpg",
   },
   {
     title: "Кухня",
     points: [
       "плита, холодильник, микроволновка / духовка",
-      "посуда, бокалы, базовый набор специй",
+      "набор посуды для приготовления пищи",
       "кофе, чай, питьевая вода",
     ],
+    image: "/photo/photo6.jpg",
   },
   {
     title: "Санузел",
     points: [
-      "душ / ванна — впиши своё",
-      "полотенца, фен",
-      "гели, мыло, базовая косметика",
+      "полотенца",
+      "банные халаты",
+      "тапочки",
     ],
+    image: "/photo/photo7.jpg",
   },
   {
     title: "Терраса и улица",
@@ -290,14 +299,16 @@ const insideItems = [
       "мангал / гриль, шампуры / решётка",
       "освещение для вечеров на улице",
     ],
+    image: "/photo/photo8.jpg",
   },
   {
     title: "Дополнительно",
     points: [
-      "Wi-Fi (если есть) и музыка",
+      "Wi-Fi и музыка",
       "настольные игры, пледы, свечи",
       "парковка рядом с домом",
     ],
+    image: "/photo/photo9.jpg",
   },
 ];
 
@@ -312,16 +323,56 @@ function Inside() {
         {insideItems.map((block) => (
           <div
             key={block.title}
-            className="rounded-3xl border border-white/10 bg-white/5 p-5"
+            className="group rounded-3xl border border-white/10 bg-white/5 overflow-hidden transition hover:border-white/20"
           >
-            <h3 className="text-sm font-semibold">{block.title}</h3>
-            <ul className="mt-3 space-y-1.5 text-sm text-white/70">
-              {block.points.map((p) => (
-                <li key={p}>• {p}</li>
-              ))}
-            </ul>
+            {block.image && (
+              <div className="h-48 overflow-hidden">
+                <img
+                  src={block.image}
+                  alt={block.title}
+                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                />
+              </div>
+            )}
+            <div className="p-5">
+              <h3 className="text-sm font-semibold">{block.title}</h3>
+              <ul className="mt-3 space-y-1.5 text-sm text-white/70">
+                {block.points.map((p) => (
+                  <li key={p}>• {p}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))}
+      </div>
+      
+      {/* Галерея дополнительных фото */}
+      <div className="mt-12">
+        <p className="mb-6 text-xs uppercase tracking-[0.2em] text-white/40">
+          Галерея
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <img
+            src="/photo/photo10.jpg"
+            alt="Интерьер"
+            className="h-48 w-full rounded-2xl object-cover"
+          />
+          <img
+            src="/photo/photo1.jpg"
+            alt="Барнхаус"
+            className="h-48 w-full rounded-2xl object-cover"
+          />
+          <img
+            src="/photo/photo2.jpg"
+            alt="Интерьер"
+            className="h-48 w-full rounded-2xl object-cover"
+          />
+          <img
+            src="/photo/photo3.jpg"
+            alt="Терраса"
+            className="h-48 w-full rounded-2xl object-cover"
+          />
+        </div>
       </div>
     </SectionWrapper>
   );
@@ -377,47 +428,37 @@ function Price() {
           <table className="w-full text-sm">
             <thead className="bg-white/5 text-xs uppercase tracking-[0.2em] text-white/50">
               <tr>
-                <th className="px-4 py-3 text-left font-normal">Период</th>
+                <th className="px-4 py-3 text-left font-normal">Услуга</th>
                 <th className="px-4 py-3 text-left font-normal">Описание</th>
                 <th className="px-4 py-3 text-left font-normal">Стоимость</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
               <tr>
-                <td className="px-4 py-4 align-top">Будни</td>
+                <td className="px-4 py-4 align-top">Проживание</td>
                 <td className="px-4 py-4 align-top text-white/70">
-                  Заезд с воскресенья/понедельника по четверг.
+                  Заселение с 🕑 14:00, выезд до 🕛 12:00
                 </td>
                 <td className="px-4 py-4 align-top font-medium">
-                  от [₽] / ночь
+                  10 000 ₽ / сутки
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-4 align-top">Выходные</td>
+                <td className="px-4 py-4 align-top">Японская купель фурако</td>
                 <td className="px-4 py-4 align-top text-white/70">
-                  Пятница–воскресенье, праздники. Минимум 1–2 ночи — впиши
-                  своё.
+                  Без наполнения
                 </td>
                 <td className="px-4 py-4 align-top font-medium">
-                  от [₽] / ночь
+                  3 000 ₽
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-4 align-top">Фотосессии</td>
+                <td className="px-4 py-4 align-top">Купель с наполнением</td>
                 <td className="px-4 py-4 align-top text-white/70">
-                  Аренда на несколько часов для съёмки без ночёвки.
+                  С цитрусовым наполнением
                 </td>
                 <td className="px-4 py-4 align-top font-medium">
-                  от [₽] / час
-                </td>
-              </tr>
-              <tr>
-                <td className="px-4 py-4 align-top">Особые даты</td>
-                <td className="px-4 py-4 align-top text-white/70">
-                  НГ, 14 февраля, 8 марта и др. — стоимость по договорённости.
-                </td>
-                <td className="px-4 py-4 align-top text-sm text-white/60">
-                  Индивидуально
+                  4 500 ₽
                 </td>
               </tr>
             </tbody>
@@ -428,7 +469,7 @@ function Price() {
           <div>
             <p className="font-medium text-white">Депозит / залог</p>
             <p className="mt-1 text-white/70">
-              Залог [сумма ₽], возвращаем в день выезда после осмотра дома.
+              Залог 3 000 ₽, возвращаем в день выезда после осмотра дома.
             </p>
           </div>
           <div>
@@ -436,11 +477,6 @@ function Price() {
             <ul className="mt-2 space-y-1.5 text-sm text-white/70">
               <li>• Курить в доме нельзя (только на улице / террасе).</li>
               <li>• Животные — по предварительному согласованию.</li>
-              <li>• Громкая музыка после 23:00 — нет.</li>
-              <li>
-                • Бережное отношение к дому и мебели — иначе удержание из
-                залога.
-              </li>
             </ul>
           </div>
           <p className="text-xs text-white/50">
