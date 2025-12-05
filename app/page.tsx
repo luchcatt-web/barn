@@ -98,52 +98,46 @@ function Hero() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
-      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-4 pt-24 pb-16 md:flex-row md:items-end md:pb-24">
-        <div className="max-w-xl">
-          <p className="mb-4 text-xs uppercase tracking-[0.3em] text-white/60">
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-4 pt-24 pb-16 md:flex-row md:items-center md:justify-center md:pb-24">
+        <div className="max-w-xl md:text-center md:mx-auto">
+          <p className="mb-6 text-xs uppercase tracking-[0.5em] text-white/50 font-light">
             барнхаус для камерного отдыха
           </p>
-          <h1 className="mb-6 text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">
-            Устали от городской суеты, уютный барн хаус в 10 минутах от Брянска ждет Вас.
-          </h1>
-          <p className="mb-8 max-w-md text-sm text-white/75 md:text-base">
-            Деревянный дом с панорамными окнами, теплой купелью и беседкой.
-            Идеален для пары, небольшой компании или тихого праздника.
-          </p>
 
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
             <a
               href="#booking"
-              className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-amber-300"
+              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 px-8 py-4 text-sm font-semibold text-black shadow-2xl shadow-amber-500/50 transition-all duration-300 hover:scale-105 hover:shadow-amber-500/70"
             >
-              Забронировать даты
+              <span className="relative z-10">Забронировать даты</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </a>
             <a
               href="#inside"
-              className="text-sm text-white/75 underline-offset-4 hover:underline"
+              className="group rounded-full border-2 border-white/30 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:border-white/60 hover:bg-white/10"
             >
               Посмотреть, что внутри
             </a>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-6 text-xs text-white/65">
-            <div>
-              <p className="font-medium text-white">до 4–6 гостей</p>
-              <p>комфортно для небольшой компании</p>
+          <div className="flex flex-wrap justify-center gap-8 text-xs text-white/70">
+            <div className="text-center">
+              <p className="font-semibold text-white mb-1">до 4–6 гостей</p>
+              <p className="text-white/60">комфортно для небольшой компании</p>
             </div>
-            <div>
-              <p className="font-medium text-white">10 мин от Брянска</p>
-              <p>удобный подъезд по асфальту</p>
+            <div className="text-center">
+              <p className="font-semibold text-white mb-1">10 мин от Брянска</p>
+              <p className="text-white/60">удобный подъезд по асфальту</p>
             </div>
-            <div>
-              <p className="font-medium text-white">формат "под ключ"</p>
-              <p>посуда, бельё, мангал — всё на месте</p>
+            <div className="text-center">
+              <p className="font-semibold text-white mb-1">формат "под ключ"</p>
+              <p className="text-white/60">посуда, бельё, мангал — всё на месте</p>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 flex-1 md:mt-0">
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
+        <div className="mt-12 flex-1 md:mt-0 md:flex md:justify-center">
+          <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-2xl">
             <HeroCard title="Тёплая купель" subtitle="расслабление и отдых в любое время года" />
             <HeroCard title="Беседка" subtitle="завтраки, закаты и гриль на улице" />
             <HeroCard title="Праздники" subtitle="дни рождения, предложения, годовщины" />
@@ -157,9 +151,10 @@ function Hero() {
 
 function HeroCard({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="rounded-3xl border border-white/15 bg-black/55 px-4 py-5 text-sm backdrop-blur">
-      <p className="font-medium">{title}</p>
-      <p className="mt-1 text-xs text-white/70">{subtitle}</p>
+    <div className="group relative overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-black/40 p-5 text-sm backdrop-blur-xl transition-all duration-300 hover:border-white/40 hover:bg-gradient-to-br hover:from-white/15 hover:via-white/10 hover:to-black/50 hover:scale-105 hover:shadow-2xl hover:shadow-amber-500/20">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/0 to-amber-500/0 group-hover:from-amber-500/5 group-hover:via-amber-500/5 group-hover:to-amber-500/10 transition-all duration-300" />
+      <p className="relative z-10 font-semibold text-white">{title}</p>
+      <p className="relative z-10 mt-2 text-xs text-white/70 leading-relaxed">{subtitle}</p>
     </div>
   );
 }
